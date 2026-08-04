@@ -1,0 +1,54 @@
+---
+# =============================================================================
+# Ansible Role: Alloy - Tasks: Configuration
+# =============================================================================
+# Deploys Alloy configuration file and systemd environment overrides.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# 1. Directory and Configuration Deployment
+# -----------------------------------------------------------------------------
+- name: Alloy | configure | Ensure Alloy configuration directory exists
+  become: "{{ alloy_become }}"
+  ansible.builtin.file:
+    path: /etc/alloy
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Alloy | configure | Deploy Alloy configuration file (config.alloy)
+  become: "{{ alloy_become }}"
+  ansible.builtin.template:
+    src: config.alloy.j2
+    dest: "{{ __alloy_config_file }}"
+    owner: root
+    group: "{{ alloy_group }}"
+    mode: "0640"
+  notify: Restart alloy service
+
+# -----------------------------------------------------------------------------
+# 2. Systemd Hardening Configuration
+# -----------------------------------------------------------------------------
+- name: Alloy | configure | Ensure systemd override directory exists
+  become: "{{ alloy_become }}"
+  ansible.builtin.file:
+    path: /etc/systemd/system/alloy.service.d
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  when: alloy_systemd_hardening_enabled | bool
+
+- name: Alloy | configure | Deploy systemd hardening override
+  become: "{{ alloy_become }}"
+  ansible.builtin.template:
+    src: override.conf.j2
+    dest: /etc/systemd/system/alloy.service.d/override.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload systemd daemon
+    - Restart alloy service
+  when: alloy_systemd_hardening_enabled | bool

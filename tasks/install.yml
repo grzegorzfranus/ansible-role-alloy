@@ -1,0 +1,43 @@
+---
+# =============================================================================
+# Ansible Role: Alloy - Tasks: Installation
+# =============================================================================
+# Installs the Grafana Alloy package via system package manager.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# 1. Package Installation
+# -----------------------------------------------------------------------------
+- name: Alloy | install | Install Grafana Alloy package (Debian)
+  become: "{{ alloy_become }}"
+  ansible.builtin.apt:
+    name: "alloy={{ alloy_version }}*"
+    state: present
+    update_cache: true
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Alloy | install | Install Grafana Alloy package (RedHat)
+  become: "{{ alloy_become }}"
+  ansible.builtin.dnf:
+    name: "alloy-{{ alloy_version }}"
+    state: present
+  when: ansible_facts['os_family'] == 'RedHat'
+
+# -----------------------------------------------------------------------------
+# 2. Service Group Membership
+# -----------------------------------------------------------------------------
+- name: Alloy | install | Add alloy user to systemd-journal group for log access
+  become: "{{ alloy_become }}"
+  ansible.builtin.user:
+    name: "{{ alloy_user }}"
+    groups: "systemd-journal"
+    append: true
+  when: alloy_enable_journald_logs | bool
+
+- name: Alloy | install | Add alloy user to docker group for container log access
+  become: "{{ alloy_become }}"
+  ansible.builtin.user:
+    name: "{{ alloy_user }}"
+    groups: "docker"
+    append: true
+  when: alloy_enable_docker_logs | bool

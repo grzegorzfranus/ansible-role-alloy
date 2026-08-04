@@ -1,0 +1,70 @@
+---
+# =============================================================================
+# Ansible Role: Alloy - Tasks: Prerequisites
+# =============================================================================
+# Installs prerequisite packages and configures repository keys/sources.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# 1. Debian/Ubuntu Package Repository Setup
+# -----------------------------------------------------------------------------
+- name: Alloy | prerequisites | Install prerequisite packages (Debian)
+  become: "{{ alloy_become }}"
+  ansible.builtin.apt:
+    name: "{{ __alloy_prereq_packages }}"
+    state: present
+    update_cache: true
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Alloy | prerequisites | Create GPG keyrings directory (Debian)
+  become: "{{ alloy_become }}"
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Alloy | prerequisites | Download Grafana GPG key ASCII file (Debian)
+  become: "{{ alloy_become }}"
+  ansible.builtin.get_url:
+    url: "{{ alloy_repo_gpg_key }}"
+    dest: /etc/apt/keyrings/grafana.asc
+    owner: root
+    group: root
+    mode: "0644"
+  when: ansible_facts['os_family'] == 'Debian'
+
+# Justification: Convert ASCII-armored Grafana PGP key into binary GPG keyring format
+# required by the APT package manager for repo signature verification.
+- name: Alloy | prerequisites | Dearmor Grafana GPG key (Debian)
+  become: "{{ alloy_become }}"
+  ansible.builtin.command:
+    cmd: "gpg --dearmor -o /etc/apt/keyrings/grafana.gpg /etc/apt/keyrings/grafana.asc"
+    creates: /etc/apt/keyrings/grafana.gpg
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Alloy | prerequisites | Add Grafana APT repository (Debian)
+  become: "{{ alloy_become }}"
+  ansible.builtin.apt_repository:
+    repo: "{{ alloy_apt_repo }}"
+    state: present
+    filename: grafana
+    update_cache: true
+  when: ansible_facts['os_family'] == 'Debian'
+
+# -----------------------------------------------------------------------------
+# 2. RedHat/EL Package Repository Setup
+# -----------------------------------------------------------------------------
+- name: Alloy | prerequisites | Add Grafana YUM repository (RedHat)
+  become: "{{ alloy_become }}"
+  ansible.builtin.yum_repository:
+    name: grafana
+    description: Grafana YUM Repository
+    baseurl: "{{ alloy_yum_repo_baseurl }}"
+    gpgcheck: true
+    gpgkey: "{{ alloy_repo_gpg_key }}"
+    enabled: true
+    state: present
+  when: ansible_facts['os_family'] == 'RedHat'

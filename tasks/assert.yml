@@ -1,0 +1,61 @@
+---
+# =============================================================================
+# Ansible Role: Alloy - Tasks: Assertions
+# =============================================================================
+# Validates role configuration parameters and preflight requirements.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# 1. General State & Parameters Validation
+# -----------------------------------------------------------------------------
+- name: Alloy | assert | Validate lifecycle state
+  ansible.builtin.assert:
+    that:
+      - alloy_state is defined
+      - alloy_state in ['present', 'absent']
+    fail_msg: "alloy_state must be 'present' or 'absent'"
+
+- name: Alloy | assert | Validate version specification
+  ansible.builtin.assert:
+    that:
+      - alloy_version is defined
+      - alloy_version is string
+      - alloy_version | length > 0
+      - alloy_version != 'latest'
+    fail_msg: "alloy_version must be a specific pinned version string (never 'latest')"
+  when: alloy_state == 'present'
+
+# -----------------------------------------------------------------------------
+# 2. Loki Push Endpoint & Mandatory Multi-Tenant Assertions
+# -----------------------------------------------------------------------------
+- name: Alloy | assert | Validate Loki push URL parameter
+  ansible.builtin.assert:
+    that:
+      - alloy_loki_url is defined
+      - alloy_loki_url is string
+      - alloy_loki_url | length > 0
+      - alloy_loki_url is match('^https?://.+')
+    fail_msg: "alloy_loki_url must be a non-empty HTTP/HTTPS URL string"
+  when: alloy_state == 'present'
+
+- name: Alloy | assert | Validate mandatory Loki tenant ID (X-Scope-OrgID)
+  ansible.builtin.assert:
+    that:
+      - alloy_tenant_id is defined
+      - alloy_tenant_id is string
+      - alloy_tenant_id | length > 0
+    fail_msg: "alloy_tenant_id is mandatory and must not be empty (required for X-Scope-OrgID header)"
+  when: alloy_state == 'present'
+
+# -----------------------------------------------------------------------------
+# 3. System Accounts & Log Sources Validation
+# -----------------------------------------------------------------------------
+- name: Alloy | assert | Validate system user and group parameters
+  ansible.builtin.assert:
+    that:
+      - alloy_user is defined
+      - alloy_user is string
+      - alloy_group is defined
+      - alloy_group is string
+    fail_msg: "alloy_user and alloy_group must be valid string identifiers"
+  when: alloy_state == 'present'

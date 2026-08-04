@@ -1,0 +1,17 @@
+---
+# =============================================================================
+# Ansible Role: Alloy - Tasks: Service Management
+# =============================================================================
+# Manages systemd service state for Grafana Alloy.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# 1. Systemd Service State Management
+# -----------------------------------------------------------------------------
+- name: Alloy | service | Ensure Grafana Alloy service state
+  become: "{{ alloy_become }}"
+  ansible.builtin.systemd:
+    name: "{{ __alloy_service_name }}"
+    state: "{{ alloy_service_enabled | ternary('started', 'stopped') }}"
+    enabled: "{{ alloy_service_enabled }}"
+  when: alloy_manage_service_restart | bool

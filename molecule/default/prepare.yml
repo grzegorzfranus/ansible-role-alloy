@@ -1,0 +1,9 @@
+---
+- name: Prepare
+  hosts: all
+  become: true
+  tasks:
+    - name: Ensure systemd-journal group exists
+      ansible.builtin.group:
+        name: systemd-journal
+        state: present

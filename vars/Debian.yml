@@ -1,0 +1,14 @@
+---
+# =============================================================================
+# Ansible Role: Alloy - Debian Internal Variables
+# =============================================================================
+# Internal package and requirement definitions for Debian/Ubuntu systems.
+# =============================================================================
+
+__alloy_packages:
+  - alloy
+
+__alloy_prereq_packages:
+  - gpg
+  - apt-transport-https
+  - ca-certificates

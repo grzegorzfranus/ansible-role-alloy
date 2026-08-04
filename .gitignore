@@ -1,0 +1,6 @@
+.ansible/
+.molecule/
+*.retry
+*.tmp
+*.swp
+.DS_Store
