@@ -3,6 +3,11 @@
   hosts: all
   gather_facts: false
   tasks:
+    - name: Prepare | Fix /etc/shadow permissions for container sudo/PAM
+      ansible.builtin.file:
+        path: /etc/shadow
+        mode: "0400"
+
     - name: Ensure systemd-journal group exists
       ansible.builtin.group:
         name: systemd-journal
