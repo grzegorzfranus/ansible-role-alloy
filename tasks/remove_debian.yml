@@ -6,7 +6,7 @@
 # =============================================================================
 
 - name: Alloy | remove | Remove Grafana Alloy package (Debian)
-  become: "{{ alloy_become }}"
+  become: true
   ansible.builtin.apt:
     name: alloy
     state: absent

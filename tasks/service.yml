@@ -6,7 +6,7 @@
 # =============================================================================
 
 - name: Alloy | service | Ensure Grafana Alloy service state
-  become: "{{ alloy_become }}"
+  become: true
   ansible.builtin.systemd:
     name: "{{ __alloy_service_name }}"
     state: "{{ alloy_service_enabled | ternary('started', 'stopped') }}"

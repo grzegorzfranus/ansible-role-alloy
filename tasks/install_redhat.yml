@@ -6,7 +6,7 @@
 # =============================================================================
 
 - name: Alloy | install | Install Grafana Alloy package (RedHat)
-  become: "{{ alloy_become }}"
+  become: true
   ansible.builtin.dnf:
     name: "alloy-{{ alloy_version }}"
     state: present

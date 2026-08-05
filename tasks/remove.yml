@@ -6,7 +6,7 @@
 # =============================================================================
 
 - name: Alloy | remove | Stop and disable Grafana Alloy service
-  become: "{{ alloy_become }}"
+  become: true
   ansible.builtin.systemd:
     name: "{{ __alloy_service_name }}"
     state: stopped
@@ -22,7 +22,7 @@
   when: ansible_facts['os_family'] == 'RedHat'
 
 - name: Alloy | remove | Remove configuration and systemd directories
-  become: "{{ alloy_become }}"
+  become: true
   ansible.builtin.file:
     path: "{{ item }}"
     state: absent

@@ -103,7 +103,6 @@ The role comes with production-ready defaults:
 ```yaml
 alloy_state: "present"
 alloy_version: "1.7.1"
-alloy_become: true
 alloy_service_enabled: true
 alloy_manage_service_restart: true
 alloy_user: "alloy"
@@ -134,7 +133,6 @@ alloy_systemd_hardening_enabled: true
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `alloy_become` | Enable privilege escalation for tasks | `true` |
 | `alloy_service_enabled` | Whether to enable and start Alloy service | `true` |
 | `alloy_manage_service_restart` | Restart service on configuration change | `true` |
 | `alloy_user` | System user account for Alloy daemon | `"alloy"` |

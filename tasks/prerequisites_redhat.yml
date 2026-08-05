@@ -6,7 +6,7 @@
 # =============================================================================
 
 - name: Alloy | prerequisites | Add Grafana YUM repository (RedHat)
-  become: "{{ alloy_become }}"
+  become: true
   ansible.builtin.yum_repository:
     name: grafana
     description: Grafana YUM Repository

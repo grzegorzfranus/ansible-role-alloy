@@ -14,7 +14,7 @@
   when: ansible_facts['os_family'] == 'RedHat'
 
 - name: Alloy | install | Add alloy user to systemd-journal group for log access
-  become: "{{ alloy_become }}"
+  become: true
   ansible.builtin.user:
     name: "{{ alloy_user }}"
     groups: "systemd-journal"
@@ -22,7 +22,7 @@
   when: alloy_enable_journald_logs | bool
 
 - name: Alloy | install | Add alloy user to docker group for container log access
-  become: "{{ alloy_become }}"
+  become: true
   ansible.builtin.user:
     name: "{{ alloy_user }}"
     groups: "docker"

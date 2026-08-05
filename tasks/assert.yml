@@ -46,8 +46,6 @@
 - name: Alloy | assert | Validate boolean parameters
   ansible.builtin.assert:
     that:
-      - alloy_become is defined
-      - alloy_become is boolean
       - alloy_service_enabled is defined
       - alloy_service_enabled is boolean
       - alloy_manage_service_restart is defined

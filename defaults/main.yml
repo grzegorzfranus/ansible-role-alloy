@@ -51,10 +51,6 @@ alloy_yum_repo_baseurl: "https://rpm.grafana.com"
 # 3. General Settings
 # -----------------------------------------------------------------------------
 
-# Enable privilege escalation (sudo) for system tasks
-# Valid values: true, false
-alloy_become: true
-
 # Enable systemd service auto-start on boot
 # Valid values: true, false
 alloy_service_enabled: true
