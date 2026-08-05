@@ -1,7 +1,7 @@
 ---
 - name: Prepare
   hosts: all
-  become: true
+  gather_facts: false
   tasks:
     - name: Ensure systemd-journal group exists
       ansible.builtin.group:

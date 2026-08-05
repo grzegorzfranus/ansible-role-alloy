@@ -1,7 +1,6 @@
 ---
 - name: Verify
   hosts: all
-  become: true
   tasks:
     - name: Verify | Check alloy binary exists
       ansible.builtin.command: "which alloy"
