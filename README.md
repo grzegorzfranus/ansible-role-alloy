@@ -2,7 +2,7 @@
 
 |Source|Version|CI|License|
 |------|-------|--|-------|
-|[![Source Code](https://img.shields.io/badge/source-github-blue.svg)](https://github.com/grzegorzfranus/ansible-role-alloy)|[![Version](https://img.shields.io/github/v/release/grzegorzfranus/ansible-role-alloy)](https://github.com/grzegorzfranus/ansible-role-alloy/releases)|[![CI](https://github.com/grzegorzfranus/ansible-role-alloy/actions/workflows/ci.yml/badge.svg)](https://github.com/grzegorzfranus/ansible-role-alloy/actions/workflows/ci.yml)|[![Repository License](https://img.shields.io/badge/license-mit-brightgreen.svg)](LICENSE)|
+|[![Source Code](https://img.shields.io/badge/source-github-blue.svg)](https://github.com/grzegorzfranus/ansible-role-alloy)|[![Version](https://img.shields.io/github/v/release/grzegorzfranus/ansible-role-alloy)](https://github.com/grzegorzfranus/ansible-role-alloy/releases)|[![CI](https://github.com/grzegorzfranus/ansible-role-alloy/actions/workflows/ci.yml/badge.svg)](https://github.com/grzegorzfranus/ansible-role-alloy/actions/workflows/ci.yml)|[![Repository License](https://img.shields.io/badge/license-apache2.0-brightgreen.svg)](LICENSE)|
 
 This Ansible role installs, configures, hardens, and manages Grafana Alloy, the unified telemetry collector for Grafana Loki. It provides a production-ready, secure log shipping solution supporting systemd journald log collection, Docker container log discovery, and mandatory multi-tenant `X-Scope-OrgID` header enforcement.
 
@@ -330,7 +330,7 @@ Contributions, bug reports, and feature requests are welcome!
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the Apache-2.0 License - see the LICENSE file for details.
 
 ## 👥 Author Information
 
