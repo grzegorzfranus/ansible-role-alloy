@@ -343,7 +343,7 @@ Contributions, bug reports, and feature requests are welcome!
   - `style:` — code formatting and style
 - Use branch naming convention: `feature/`, `bugfix/`, `fix/`, `hotfix/`, `release/`, `chore/`, `docs/`, `refactor/`, `test/`, `build/`, `ci/`, `perf/`, `revert/`
 - Ensure your code passes all CI checks (YAML lint, Ansible lint, Molecule tests)
-- Centralized workflows from [github-workflows](https://github.com/grzegorzfranus/github-workflows) version `v3.0.1` are used to run CI/CD pipelines
+- Centralized workflows from [github-workflows](https://github.com/grzegorzfranus/github-workflows) are used to run CI/CD pipelines
 - Submit a pull request describing your changes (a template is available under `.github/PULL_REQUEST_TEMPLATE/pull_request_template.md` to help structure your PR description)
 - For major changes, please open an issue first to discuss what you would like to change (issue templates for bug reports, feature requests, and tasks are available under `.github/ISSUE_TEMPLATE/`)
 
