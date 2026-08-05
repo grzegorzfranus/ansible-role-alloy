@@ -1,0 +1,13 @@
+---
+# =============================================================================
+# Ansible Role: Alloy - Tasks: Removal (Debian)
+# =============================================================================
+# Uninstalls Grafana Alloy APT package on Debian/Ubuntu.
+# =============================================================================
+
+- name: Alloy | remove | Remove Grafana Alloy package (Debian)
+  become: true
+  ansible.builtin.apt:
+    name: alloy
+    state: absent
+    purge: true

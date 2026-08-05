@@ -1,0 +1,37 @@
+---
+- name: Verify
+  hosts: all
+  tasks:
+    - name: Verify | Check alloy binary exists
+      ansible.builtin.command: "which alloy"
+      register: __verify_alloy_binary
+      changed_when: false
+
+    - name: Verify | Assert alloy binary installed
+      ansible.builtin.assert:
+        that:
+          - __verify_alloy_binary.rc == 0
+        fail_msg: "Alloy binary is not installed"
+
+    - name: Verify | Check config.alloy file exists
+      ansible.builtin.stat:
+        path: /etc/alloy/config.alloy
+      register: __verify_config_file
+
+    - name: Verify | Assert config.alloy exists with correct permissions
+      ansible.builtin.assert:
+        that:
+          - __verify_config_file.stat.exists
+          - __verify_config_file.stat.mode == "0640"
+        fail_msg: "Alloy config file missing or incorrect permissions"
+
+    - name: Verify | Check tenant_id present in config.alloy
+      ansible.builtin.slurp:
+        src: /etc/alloy/config.alloy
+      register: __verify_config_content
+
+    - name: Verify | Assert tenant_id and X-Scope-OrgID configuration present
+      ansible.builtin.assert:
+        that:
+          - "'molecule_test' in (__verify_config_content.content | b64decode)"
+        fail_msg: "Tenant ID missing from rendered config.alloy"

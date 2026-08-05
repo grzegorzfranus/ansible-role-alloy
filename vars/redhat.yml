@@ -1,0 +1,12 @@
+---
+# =============================================================================
+# Ansible Role: Alloy - RedHat Internal Variables
+# =============================================================================
+# Internal package and requirement definitions for RedHat/EL systems.
+# =============================================================================
+
+__alloy_packages:
+  - alloy
+
+__alloy_prereq_packages:
+  - ca-certificates

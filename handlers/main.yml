@@ -1,0 +1,17 @@
+---
+# =============================================================================
+# Ansible Role: Alloy - Handlers
+# =============================================================================
+- name: Reload systemd daemon
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Restart alloy service
+  become: true
+  ansible.builtin.systemd:
+    name: "{{ __alloy_service_name }}"
+    state: restarted
+  when:
+    - alloy_service_enabled | bool
+    - alloy_manage_service_restart | bool

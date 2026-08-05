@@ -1,0 +1,43 @@
+---
+# =============================================================================
+# Ansible Role: Alloy - Tasks: Main Entrypoint
+# =============================================================================
+# Flow: include_vars → assert → prerequisites → install → configure → service (or remove)
+# =============================================================================
+
+- name: Alloy | include_vars | Gather OS specific variables
+  ansible.builtin.include_vars: "{{ lookup('first_found', params) }}"
+  vars:
+    params:
+      files:
+        - "{{ ansible_facts['distribution'] | lower }}_{{ ansible_facts['distribution_version'] | lower }}.yml"
+        - "{{ ansible_facts['distribution'] | lower }}_{{ ansible_facts['distribution_major_version'] | lower }}.yml"
+        - "{{ ansible_facts['distribution'] | lower }}.yml"
+        - "{{ ansible_facts['os_family'] | lower }}_{{ ansible_facts['distribution_version'] | lower }}.yml"
+        - "{{ ansible_facts['os_family'] | lower }}_{{ ansible_facts['distribution_major_version'].split('.')[0] }}.yml"
+        - "{{ ansible_facts['os_family'] | lower }}.yml"
+        - "main.yml"
+      paths:
+        - "{{ role_path }}/vars"
+
+- name: Alloy | main | Run configuration assertions
+  ansible.builtin.include_tasks: assert.yml
+
+- name: "Alloy | main | Execute lifecycle tasks for state: present"
+  when: alloy_state == 'present'
+  block:
+    - name: Alloy | main | Run prerequisite tasks
+      ansible.builtin.include_tasks: prerequisites.yml
+
+    - name: Alloy | main | Run installation tasks
+      ansible.builtin.include_tasks: install.yml
+
+    - name: Alloy | main | Run configuration tasks
+      ansible.builtin.include_tasks: configure.yml
+
+    - name: Alloy | main | Run service management tasks
+      ansible.builtin.include_tasks: service.yml
+
+- name: "Alloy | main | Execute removal tasks for state: absent"
+  ansible.builtin.include_tasks: remove.yml
+  when: alloy_state == 'absent'

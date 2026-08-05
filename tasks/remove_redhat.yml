@@ -1,0 +1,12 @@
+---
+# =============================================================================
+# Ansible Role: Alloy - Tasks: Removal (RedHat)
+# =============================================================================
+# Uninstalls Grafana Alloy DNF package on RedHat/EL.
+# =============================================================================
+
+- name: Alloy | remove | Remove Grafana Alloy package (RedHat)
+  become: true
+  ansible.builtin.dnf:
+    name: alloy
+    state: absent

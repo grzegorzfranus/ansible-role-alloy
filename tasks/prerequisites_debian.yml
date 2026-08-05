@@ -1,0 +1,47 @@
+---
+# =============================================================================
+# Ansible Role: Alloy - Tasks: Prerequisites (Debian)
+# =============================================================================
+# Installs prerequisite packages and configures APT repository for Debian/Ubuntu.
+# =============================================================================
+
+- name: Alloy | prerequisites | Install prerequisite packages (Debian)
+  become: true
+  ansible.builtin.apt:
+    name: "{{ __alloy_prereq_packages }}"
+    state: present
+    update_cache: true
+
+- name: Alloy | prerequisites | Create GPG keyrings directory (Debian)
+  become: true
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Alloy | prerequisites | Download Grafana GPG key ASCII file (Debian)
+  become: true
+  ansible.builtin.get_url:
+    url: "{{ alloy_repo_gpg_key }}"
+    dest: /etc/apt/keyrings/grafana.asc
+    owner: root
+    group: root
+    mode: "0644"
+
+# Justification: Convert ASCII-armored Grafana PGP key into binary GPG keyring format
+# required by the APT package manager for repo signature verification.
+- name: Alloy | prerequisites | Dearmor Grafana GPG key (Debian)
+  become: true
+  ansible.builtin.command:
+    cmd: "gpg --dearmor -o /etc/apt/keyrings/grafana.gpg /etc/apt/keyrings/grafana.asc"
+    creates: /etc/apt/keyrings/grafana.gpg
+
+- name: Alloy | prerequisites | Add Grafana APT repository (Debian)
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "{{ alloy_apt_repo }}"
+    state: present
+    filename: grafana
+    update_cache: true

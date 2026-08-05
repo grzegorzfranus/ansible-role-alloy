@@ -1,0 +1,11 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    alloy_loki_url: "http://127.0.0.1:3100/loki/api/v1/push"
+    alloy_tenant_id: "molecule_test"
+    alloy_manage_service_restart: false
+  tasks:
+    - name: Converge | Include Grafana Alloy role
+      ansible.builtin.include_role:
+        name: "{{ playbook_dir }}/../.."

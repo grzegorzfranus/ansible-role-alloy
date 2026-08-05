@@ -1,0 +1,10 @@
+---
+# =============================================================================
+# Ansible Role: Alloy - Internal Variables
+# =============================================================================
+# Internal constants and computed values.
+# These are NOT user-overridable. All use double-underscore prefix per Red Hat CoP.
+# =============================================================================
+
+__alloy_config_file: "/etc/alloy/config.alloy"
+__alloy_service_name: "alloy"

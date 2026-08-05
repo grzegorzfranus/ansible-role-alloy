@@ -1,0 +1,12 @@
+---
+# =============================================================================
+# Ansible Role: Alloy - Tasks: Installation (RedHat)
+# =============================================================================
+# Installs Grafana Alloy DNF package on RedHat/EL.
+# =============================================================================
+
+- name: Alloy | install | Install Grafana Alloy package (RedHat)
+  become: true
+  ansible.builtin.dnf:
+    name: "alloy-{{ alloy_version }}"
+    state: present
