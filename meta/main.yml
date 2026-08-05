@@ -8,7 +8,7 @@ galaxy_info:
   author: Grzegorz Franus
   description: Ansible role for installing and configuring Grafana Alloy log shipping agent
   company: Comlia
-  license: MIT
+  license: Apache-2.0
   min_ansible_version: "2.15.0"
   platforms:
     - name: Ubuntu
