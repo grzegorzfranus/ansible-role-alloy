@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2](https://github.com/grzegorzfranus/ansible-role-alloy/compare/v1.0.1...v1.0.2) (2026-08-05)
+
+
+### Miscellaneous
+
+* update role license to Apache-2.0 ([#10](https://github.com/grzegorzfranus/ansible-role-alloy/issues/10)) ([f048712](https://github.com/grzegorzfranus/ansible-role-alloy/commit/f048712a1330518c7935b81694f4b34baf5632e4))
+
 ## [1.0.1](https://github.com/grzegorzfranus/ansible-role-alloy/compare/v1.0.0...v1.0.1) (2026-08-05)
 
 
