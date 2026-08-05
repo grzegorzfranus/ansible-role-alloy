@@ -6,8 +6,6 @@
 
 This Ansible role installs, configures, hardens, and manages Grafana Alloy, the unified telemetry collector for Grafana Loki. It provides a production-ready, secure log shipping solution supporting systemd journald log collection, Docker container log discovery, and mandatory multi-tenant `X-Scope-OrgID` header enforcement.
 
----
-
 ## ✨ Features
 
 - 📦 **Native Package Deployment**: Installed as a native system package managed directly by systemd
@@ -18,11 +16,9 @@ This Ansible role installs, configures, hardens, and manages Grafana Alloy, the 
 - 🧪 **Molecule Testing**: Tested via containerized Molecule scenarios (`default`) across supported OS platforms
 - 🔄 **Idempotent Lifecycle**: Safe execution supporting `present` and `absent` lifecycle states
 
----
-
 ## 🎯 Architecture
 
-The role configures Grafana Alloy to run natively on the host system, reading local journal logs and Docker socket logs before shipping them over HTTP to Grafana Loki:
+The role configures Grafana Alloy to run natively on the host system, reading local journal logs and Docker socket logs before shipping them over HTTP/HTTPS to Grafana Loki:
 
 ```
 [ Systemd Journal / Docker Socket ]
@@ -41,8 +37,6 @@ The role configures Grafana Alloy to run natively on the host system, reading lo
 - **Low Overhead:** Native package execution incurs zero container runtime abstraction overhead and integrates directly with systemd security sandboxing.
 - **Automated Lifecycle & Updates:** Pinned native package management (`alloy=1.7.1*`) via official Grafana repositories ensures deterministic, auditable software updates.
 
----
-
 ## 📋 Requirements
 
 - **Ansible**: 2.15 or higher
@@ -51,7 +45,6 @@ The role configures Grafana Alloy to run natively on the host system, reading lo
 - **Privileges**: sudo/root access on target hosts
 
 ### Supported operating systems
-
 List of officially supported operating systems for this role:
 
 | OS Family | Version | Status |
@@ -73,14 +66,10 @@ Ansible >= 2.15
 Python >= 3.9
 
 ### Setup module
-
 The role uses facts gathered by Ansible on the remote host (`ansible_facts['os_family']`). If you disable the Setup module in your playbook, the role will not work properly.
 
 ### Root access
-
 This role requires root access for package installation and service management.
-
----
 
 ## 🚀 Quick Start
 
@@ -105,8 +94,6 @@ This role requires root access for package installation and service management.
 ansible-playbook -i inventory alloy-setup.yml
 ```
 
----
-
 ## ⚙️ Configuration
 
 ### Default Configuration
@@ -126,30 +113,54 @@ alloy_enable_docker_logs: false
 alloy_systemd_hardening_enabled: true
 ```
 
----
-
 ## 📊 Variables
 
-### Core Options (`defaults/main.yml`)
+### Lifecycle Options
 
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `alloy_state` | Define lifecycle state (`present` or `absent`) | `"present"` |
+
+### Version & Package Repository Settings
+
+| Variable | Description | Default |
+|----------|-------------|---------|
 | `alloy_version` | Pinned Grafana Alloy release version string | `"1.7.1"` |
+| `alloy_repo_gpg_key` | GPG key URL for Grafana package repository | `"https://apt.grafana.com/gpg.key"` |
+| `alloy_apt_repo` | APT repository specification line for Grafana packages | `"deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main"` |
+| `alloy_yum_repo_baseurl` | YUM/DNF repository base URL for Grafana packages | `"https://rpm.grafana.com"` |
+
+### General Settings
+
+| Variable | Description | Default |
+|----------|-------------|---------|
 | `alloy_become` | Enable privilege escalation for tasks | `true` |
 | `alloy_service_enabled` | Whether to enable and start Alloy service | `true` |
 | `alloy_manage_service_restart` | Restart service on configuration change | `true` |
 | `alloy_user` | System user account for Alloy daemon | `"alloy"` |
 | `alloy_group` | System group account for Alloy daemon | `"alloy"` |
+
+### Loki Push Target & Multi-Tenancy
+
+| Variable | Description | Default |
+|----------|-------------|---------|
 | `alloy_loki_url` | **Mandatory** Loki push endpoint URL | `""` |
 | `alloy_tenant_id` | **Mandatory** Loki tenant ID (`X-Scope-OrgID` header) | `""` |
 | `alloy_custom_labels` | Custom extra labels attached to shipped logs | `{}` |
+
+### Log Collection Sources
+
+| Variable | Description | Default |
+|----------|-------------|---------|
 | `alloy_enable_journald_logs` | Enable systemd journald log collection | `true` |
 | `alloy_enable_docker_logs` | Enable Docker container log collection | `false` |
 | `alloy_docker_socket_path` | Unix socket path to Docker daemon | `"unix:///var/run/docker.sock"` |
-| `alloy_systemd_hardening_enabled` | Enable systemd security sandboxing override | `true` |
 
----
+### Systemd Hardening & Execution
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `alloy_systemd_hardening_enabled` | Enable systemd security sandboxing override | `true` |
 
 ## 📌 Role Properties
 
@@ -160,13 +171,9 @@ alloy_systemd_hardening_enabled: true
 | **Check Mode** | ✅ Supported | Most tasks work in check mode. Mutating commands are skipped. |
 | **Diff Mode** | ✅ Supported | Template tasks support diff mode for change preview. |
 
----
-
 ## 📤 Role Output
 
 This role does not set any public output facts.
-
----
 
 ## 🔍 Verification
 
@@ -192,8 +199,6 @@ curl -s -G "http://100.95.91.122:3100/loki/api/v1/query_range" \
   --data-urlencode "end=$(date +%s)000000000"
 ```
 
----
-
 ## 🛡️ Security Features
 
 - ✅ **Mandatory Multi-Tenant Validation**: Enforces non-empty `alloy_tenant_id` before rendering config
@@ -201,42 +206,40 @@ curl -s -G "http://100.95.91.122:3100/loki/api/v1/query_range" \
 - ✅ **Systemd Hardening**: Applies `ProtectSystem=full`, `ProtectHome=true`, and `PrivateTmp=true` overrides
 - ✅ **Least Privilege Access**: `alloy` user granted read access to `systemd-journal` and `docker` groups only as needed
 
----
+### Uninstall
+
+Automated removal is supported via `alloy_state: absent`. To remove Alloy manually:
+
+```bash
+sudo systemctl disable --now alloy
+sudo apt remove --purge alloy   # or: sudo dnf remove alloy
+```
+
+### Roll-back Capabilities
+
+Configuration files can be restored from system backups or previous git tags. If reverting configuration, restart the `alloy` systemd service.
 
 ## 🔒 Security considerations
 
 - Keep `alloy_tenant_id` synchronized with your environment structure (`management`, `nonprod`, `production`).
 - Ensure Loki endpoint (`alloy_loki_url`) is bound to a secure mesh network (Tailscale) or protected by TLS.
 
----
-
 ## 🧪 Check mode behavior
 
 - Configuration template rendering and file permission checks run normally in Check Mode.
 - Mutating package installation and systemd service changes are safely skipped.
 
----
+## 🏷️ Tags usage
 
-## 🏷️ Tags
-
-| Tag | Description |
-|-----|-------------|
-| `always` | Variable loading and validation tasks |
-| `alloy` | Role-wide task execution |
-
----
+- Use `--tags` to run selective parts of the role: `always`, `alloy_setup`, `alloy_init`, `alloy_validate`, `alloy_requirements`, `alloy_install`, `alloy_configure`, `alloy_service`, `alloy_remove`.
 
 ## 🌐 Network resilience
 
 - Alloy pushes logs over HTTP/HTTPS to `alloy_loki_url`. Ensure firewall and routing rules allow outbound TCP traffic to the Loki port (e.g. `3100`).
 
----
-
 ## 🧰 Repository management
 
 - This role configures official Grafana package repositories (`https://apt.grafana.com` on Debian/Ubuntu, `https://rpm.grafana.com` on RedHat/EL).
-
----
 
 ## 🔧 Troubleshooting
 
@@ -246,8 +249,6 @@ curl -s -G "http://100.95.91.122:3100/loki/api/v1/query_range" \
 # View systemd journal for Alloy
 sudo journalctl -u alloy -f --no-pager
 ```
-
----
 
 ## 📁 File Structure
 
@@ -262,6 +263,10 @@ ansible-role-alloy/
 │   └── argument_specs.yml   # Native argument specification validation
 ├── molecule/
 │   └── default/             # Default testing scenario
+│       ├── converge.yml
+│       ├── molecule.yml
+│       ├── prepare.yml
+│       └── verify.yml
 ├── tasks/
 │   ├── main.yml             # Main task orchestration
 │   ├── assert.yml           # Preflight parameter assertions
@@ -275,17 +280,29 @@ ansible-role-alloy/
 │   └── override.conf.j2     # Systemd hardening override template
 └── vars/
     ├── main.yml             # Internal constants
-    ├── Debian.yml           # Debian/Ubuntu package variables
-    └── RedHat.yml           # RedHat/EL package variables
+    ├── debian.yml           # Debian/Ubuntu package variables
+    └── redhat.yml           # RedHat/EL package variables
 ```
 
----
+## 🏷️ Tags
+
+All tags are prefixed with `alloy_` to avoid collisions.
+
+| Tag | Description |
+|-----|-------------|
+| `always` | Tasks that always run (variable loading and validation) |
+| `alloy_setup` | Setup tasks including OS-specific variables, requirements, installation, and configuration |
+| `alloy_init` | Initial setup tasks |
+| `alloy_validate` | Variable validation tasks |
+| `alloy_requirements` | System requirements verification |
+| `alloy_install` | Package installation tasks |
+| `alloy_configure` | Service configuration tasks |
+| `alloy_service` | Service management tasks |
+| `alloy_remove` | Uninstallation and cleanup tasks |
 
 ## CI/CD Pipeline
 
 This repository uses automated quality gates enforcing YAML linting, Ansible linting, and Molecule container integration testing.
-
----
 
 ## Example Playbooks
 
@@ -303,19 +320,13 @@ This repository uses automated quality gates enforcing YAML linting, Ansible lin
         alloy_enable_docker_logs: true
 ```
 
----
-
 ## 🤝 Contributing
 
 Contributions, bug reports, and feature requests are welcome!
 
----
-
 ## 📝 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
----
 
 ## 👥 Author Information
 

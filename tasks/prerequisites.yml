@@ -5,9 +5,6 @@
 # Installs prerequisite packages and configures repository keys/sources.
 # =============================================================================
 
-# -----------------------------------------------------------------------------
-# 1. Debian/Ubuntu Package Repository Setup
-# -----------------------------------------------------------------------------
 - name: Alloy | prerequisites | Install prerequisite packages (Debian)
   become: "{{ alloy_become }}"
   ansible.builtin.apt:
@@ -54,9 +51,6 @@
     update_cache: true
   when: ansible_facts['os_family'] == 'Debian'
 
-# -----------------------------------------------------------------------------
-# 2. RedHat/EL Package Repository Setup
-# -----------------------------------------------------------------------------
 - name: Alloy | prerequisites | Add Grafana YUM repository (RedHat)
   become: "{{ alloy_become }}"
   ansible.builtin.yum_repository:

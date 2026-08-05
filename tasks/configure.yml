@@ -5,9 +5,6 @@
 # Deploys Alloy configuration file and systemd environment overrides.
 # =============================================================================
 
-# -----------------------------------------------------------------------------
-# 1. Directory and Configuration Deployment
-# -----------------------------------------------------------------------------
 - name: Alloy | configure | Ensure Alloy configuration directory exists
   become: "{{ alloy_become }}"
   ansible.builtin.file:
@@ -25,11 +22,9 @@
     owner: root
     group: "{{ alloy_group }}"
     mode: "0640"
+    validate: "alloy fmt %s"
   notify: Restart alloy service
 
-# -----------------------------------------------------------------------------
-# 2. Systemd Hardening Configuration
-# -----------------------------------------------------------------------------
 - name: Alloy | configure | Ensure systemd override directory exists
   become: "{{ alloy_become }}"
   ansible.builtin.file:

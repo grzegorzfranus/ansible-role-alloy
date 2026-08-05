@@ -19,6 +19,18 @@ argument_specs:
         type: str
         default: "1.7.1"
         description: Pinned version string of Grafana Alloy.
+      alloy_repo_gpg_key:
+        type: str
+        default: "https://apt.grafana.com/gpg.key"
+        description: GPG key URL for Grafana package repository.
+      alloy_apt_repo:
+        type: str
+        default: "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main"
+        description: APT repository specification line for Grafana packages.
+      alloy_yum_repo_baseurl:
+        type: str
+        default: "https://rpm.grafana.com"
+        description: YUM/DNF repository base URL for Grafana packages.
       alloy_become:
         type: bool
         default: true

@@ -3,17 +3,16 @@
 # Ansible Role: Alloy - Tasks: Assertions
 # =============================================================================
 # Validates role configuration parameters and preflight requirements.
+# Basic type/choice validation is handled by meta/argument_specs.yml.
 # =============================================================================
 
-# -----------------------------------------------------------------------------
-# 1. General State & Parameters Validation
-# -----------------------------------------------------------------------------
 - name: Alloy | assert | Validate lifecycle state
   ansible.builtin.assert:
     that:
       - alloy_state is defined
       - alloy_state in ['present', 'absent']
     fail_msg: "alloy_state must be 'present' or 'absent'"
+    success_msg: "Lifecycle state validated: {{ alloy_state }}"
 
 - name: Alloy | assert | Validate version specification
   ansible.builtin.assert:
@@ -23,11 +22,59 @@
       - alloy_version | length > 0
       - alloy_version != 'latest'
     fail_msg: "alloy_version must be a specific pinned version string (never 'latest')"
+    success_msg: "Version specification validated: {{ alloy_version }}"
   when: alloy_state == 'present'
 
-# -----------------------------------------------------------------------------
-# 2. Loki Push Endpoint & Mandatory Multi-Tenant Assertions
-# -----------------------------------------------------------------------------
+- name: Alloy | assert | Validate package repository parameters
+  ansible.builtin.assert:
+    that:
+      - alloy_repo_gpg_key is defined
+      - alloy_repo_gpg_key is string
+      - alloy_repo_gpg_key | length > 0
+      - alloy_repo_gpg_key is match('^https://.+')
+      - alloy_apt_repo is defined
+      - alloy_apt_repo is string
+      - alloy_apt_repo | length > 0
+      - alloy_yum_repo_baseurl is defined
+      - alloy_yum_repo_baseurl is string
+      - alloy_yum_repo_baseurl | length > 0
+      - alloy_yum_repo_baseurl is match('^https://.+')
+    fail_msg: "Repository variables must be non-empty strings and GPG/YUM URLs must start with https://"
+    success_msg: "Package repository parameters validated"
+  when: alloy_state == 'present'
+
+- name: Alloy | assert | Validate boolean parameters
+  ansible.builtin.assert:
+    that:
+      - alloy_become is defined
+      - alloy_become is boolean
+      - alloy_service_enabled is defined
+      - alloy_service_enabled is boolean
+      - alloy_manage_service_restart is defined
+      - alloy_manage_service_restart is boolean
+      - alloy_enable_journald_logs is defined
+      - alloy_enable_journald_logs is boolean
+      - alloy_enable_docker_logs is defined
+      - alloy_enable_docker_logs is boolean
+      - alloy_systemd_hardening_enabled is defined
+      - alloy_systemd_hardening_enabled is boolean
+    fail_msg: "Boolean flags must be true or false"
+    success_msg: "Boolean parameters validated"
+  when: alloy_state == 'present'
+
+- name: Alloy | assert | Validate system user and group parameters
+  ansible.builtin.assert:
+    that:
+      - alloy_user is defined
+      - alloy_user is string
+      - alloy_user | length > 0
+      - alloy_group is defined
+      - alloy_group is string
+      - alloy_group | length > 0
+    fail_msg: "alloy_user and alloy_group must be non-empty string identifiers"
+    success_msg: "System accounts validated: {{ alloy_user }}:{{ alloy_group }}"
+  when: alloy_state == 'present'
+
 - name: Alloy | assert | Validate Loki push URL parameter
   ansible.builtin.assert:
     that:
@@ -36,6 +83,7 @@
       - alloy_loki_url | length > 0
       - alloy_loki_url is match('^https?://.+')
     fail_msg: "alloy_loki_url must be a non-empty HTTP/HTTPS URL string"
+    success_msg: "Loki push URL validated"
   when: alloy_state == 'present'
 
 - name: Alloy | assert | Validate mandatory Loki tenant ID (X-Scope-OrgID)
@@ -45,17 +93,24 @@
       - alloy_tenant_id is string
       - alloy_tenant_id | length > 0
     fail_msg: "alloy_tenant_id is mandatory and must not be empty (required for X-Scope-OrgID header)"
+    success_msg: "Loki tenant ID validated: {{ alloy_tenant_id }}"
   when: alloy_state == 'present'
 
-# -----------------------------------------------------------------------------
-# 3. System Accounts & Log Sources Validation
-# -----------------------------------------------------------------------------
-- name: Alloy | assert | Validate system user and group parameters
+- name: Alloy | assert | Validate custom labels mapping
   ansible.builtin.assert:
     that:
-      - alloy_user is defined
-      - alloy_user is string
-      - alloy_group is defined
-      - alloy_group is string
-    fail_msg: "alloy_user and alloy_group must be valid string identifiers"
+      - alloy_custom_labels is defined
+      - alloy_custom_labels is mapping
+    fail_msg: "alloy_custom_labels must be a dictionary of key-value pairs"
+    success_msg: "Custom labels mapping validated"
+  when: alloy_state == 'present'
+
+- name: Alloy | assert | Validate Docker socket path parameter
+  ansible.builtin.assert:
+    that:
+      - alloy_docker_socket_path is defined
+      - alloy_docker_socket_path is string
+      - alloy_docker_socket_path | length > 0
+    fail_msg: "alloy_docker_socket_path must be a non-empty string"
+    success_msg: "Docker socket path validated: {{ alloy_docker_socket_path }}"
   when: alloy_state == 'present'

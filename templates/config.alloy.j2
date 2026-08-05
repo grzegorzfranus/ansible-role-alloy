@@ -1,5 +1,5 @@
 #jinja2: trim_blocks: True, lstrip_blocks: True
-{{ ansible_managed | comment }}
+{{ ansible_managed | comment(decoration='// ') }}
 
 // Grafana Alloy Configuration for Log Shipping to Loki
 // Target Loki Endpoint: {{ alloy_loki_url }}

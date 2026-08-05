@@ -5,9 +5,6 @@
 # Uninstalls Grafana Alloy package and removes configurations.
 # =============================================================================
 
-# -----------------------------------------------------------------------------
-# 1. Service Cleanup & Uninstallation
-# -----------------------------------------------------------------------------
 - name: Alloy | remove | Stop and disable Grafana Alloy service
   become: "{{ alloy_become }}"
   ansible.builtin.systemd:
@@ -31,9 +28,6 @@
     state: absent
   when: ansible_facts['os_family'] == 'RedHat'
 
-# -----------------------------------------------------------------------------
-# 2. File and Directory Cleanup
-# -----------------------------------------------------------------------------
 - name: Alloy | remove | Remove configuration and systemd directories
   become: "{{ alloy_become }}"
   ansible.builtin.file:

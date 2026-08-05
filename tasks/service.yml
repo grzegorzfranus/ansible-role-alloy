@@ -5,9 +5,6 @@
 # Manages systemd service state for Grafana Alloy.
 # =============================================================================
 
-# -----------------------------------------------------------------------------
-# 1. Systemd Service State Management
-# -----------------------------------------------------------------------------
 - name: Alloy | service | Ensure Grafana Alloy service state
   become: "{{ alloy_become }}"
   ansible.builtin.systemd:
