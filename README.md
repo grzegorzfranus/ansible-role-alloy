@@ -252,40 +252,52 @@ sudo journalctl -u alloy -f --no-pager
 
 ```
 ansible-role-alloy/
+├── .github/
+│   ├── ISSUE_TEMPLATE/        # Issue report templates (bug, feature, task)
+│   │   ├── bug_report.yml
+│   │   ├── config.yml
+│   │   ├── feature_request.yml
+│   │   └── task.yml
+│   ├── PULL_REQUEST_TEMPLATE/  # Pull request description template
+│   │   └── pull_request_template.md
+│   ├── workflows/             # Centralized GitHub Actions CI/CD workflows
+│   │   ├── ci.yml
+│   │   └── release.yml
+│   └── dependabot.yml         # Dependabot configuration for GitHub Actions
 ├── defaults/
-│   └── main.yml             # Default configuration variables
+│   └── main.yml               # Default configuration variables
 ├── handlers/
-│   └── main.yml             # Systemd reload and service restart handlers
+│   └── main.yml               # Systemd reload and service restart handlers
 ├── meta/
-│   ├── main.yml             # Role metadata and Galaxy specifications
-│   └── argument_specs.yml   # Native argument specification validation
-├── molecule/
-│   └── default/             # Default testing scenario
+│   ├── main.yml               # Role metadata and Galaxy specifications
+│   └── argument_specs.yml     # Native argument specification validation
+├── molecule/                  # Molecule testing framework
+│   └── default/               # Default testing scenario
 │       ├── converge.yml
 │       ├── molecule.yml
 │       ├── prepare.yml
 │       └── verify.yml
 ├── tasks/
-│   ├── main.yml             # Main task orchestration
-│   ├── assert.yml           # Preflight parameter assertions
-│   ├── prerequisites.yml    # OS-family prerequisites dispatcher
+│   ├── main.yml               # Main task orchestration
+│   ├── assert.yml             # Preflight parameter assertions
+│   ├── prerequisites.yml      # OS-family prerequisites dispatcher
 │   ├── prerequisites_debian.yml # APT repository & GPG setup (Debian/Ubuntu)
 │   ├── prerequisites_redhat.yml # YUM/DNF repository setup (RedHat/EL)
-│   ├── install.yml          # Package installation dispatcher
-│   ├── install_debian.yml   # APT package installation (Debian/Ubuntu)
-│   ├── install_redhat.yml   # DNF package installation (RedHat/EL)
-│   ├── configure.yml        # Config & systemd override deployment
-│   ├── service.yml          # Service state management
-│   ├── remove.yml           # Removal dispatcher
-│   ├── remove_debian.yml    # APT package removal (Debian/Ubuntu)
-│   └── remove_redhat.yml    # DNF package removal (RedHat/EL)
+│   ├── install.yml            # Package installation dispatcher
+│   ├── install_debian.yml     # APT package installation (Debian/Ubuntu)
+│   ├── install_redhat.yml     # DNF package installation (RedHat/EL)
+│   ├── configure.yml          # Config & systemd override deployment
+│   ├── service.yml            # Service state management
+│   ├── remove.yml             # Removal dispatcher
+│   ├── remove_debian.yml      # APT package removal (Debian/Ubuntu)
+│   └── remove_redhat.yml      # DNF package removal (RedHat/EL)
 ├── templates/
-│   ├── config.alloy.j2      # Main Alloy HCL configuration template
-│   └── override.conf.j2     # Systemd hardening override template
+│   ├── config.alloy.j2        # Main Alloy HCL configuration template
+│   └── override.conf.j2       # Systemd hardening override template
 └── vars/
-    ├── main.yml             # Internal constants
-    ├── debian.yml           # Debian/Ubuntu package variables
-    └── redhat.yml           # RedHat/EL package variables
+    ├── main.yml               # Internal constants
+    ├── debian.yml             # Debian/Ubuntu package variables
+    └── redhat.yml             # RedHat/EL package variables
 ```
 
 ## 🏷️ Tags
@@ -306,7 +318,29 @@ All tags are prefixed with `alloy_` to avoid collisions.
 
 ## CI/CD Pipeline
 
-This repository uses automated quality gates enforcing YAML linting, Ansible linting, and Molecule container integration testing.
+This repository uses centralized, reusable GitHub Actions workflows from [github-workflows](https://github.com/grzegorzfranus/github-workflows) for quality assurance, security scanning, and release automation.
+
+### CI Pipeline (`ansible-ci.yml`)
+
+Runs on every Pull Request in a two-tier gate pattern:
+
+1. **Branch Name Lint** — enforces naming conventions (`feature/`, `bugfix/`, `fix/`, `hotfix/`, `release/`, `chore/`, `docs/`, `refactor/`, `test/`, `build/`, `ci/`, `perf/`, `revert/`)
+2. **PR Title Lint** — enforces [Conventional Commits](https://www.conventionalcommits.org/) format (`feat:`, `fix:`, `ci:`, etc.)
+3. **YAML Syntax Lint** — validates YAML formatting via `yamllint`
+4. **Ansible Lint** — checks Ansible best practices and role standards
+5. **Galaxy Metadata Validation** — verifies `meta/main.yml` schema and requirements (`ansible-meta-validate.yml`)
+6. **Security Scanning** — TruffleHog secret detection and Trivy IaC scanning (`ansible-security.yml`)
+7. **Molecule Integration Tests** — executes Molecule test matrix across supported distros (`ansible-molecule.yml`)
+8. **Merge Check Gate** — single authoritative status check aggregating all results for branch protection
+
+### Release & Publish Pipeline (`ansible-publish.yml`)
+
+Automated via [Release Please](https://github.com/googleapis/release-please):
+
+1. **Push to `main`** → Release Please creates or updates a Release PR with automated changelog generation
+2. **Release PR Validation** → validates YAML syntax and actions schema before setting `Merge Check` status
+3. **Merge Release PR** → creates Git version tag and GitHub Release automatically
+4. **Ansible Galaxy Publish** → publishes tagged release to Ansible Galaxy via `ansible-publish.yml`
 
 ## Example Playbooks
 
