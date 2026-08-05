@@ -270,11 +270,17 @@ ansible-role-alloy/
 ├── tasks/
 │   ├── main.yml             # Main task orchestration
 │   ├── assert.yml           # Preflight parameter assertions
-│   ├── prerequisites.yml    # APT/YUM repository & GPG setup
-│   ├── install.yml          # Package installation
+│   ├── prerequisites.yml    # OS-family prerequisites dispatcher
+│   ├── prerequisites_debian.yml # APT repository & GPG setup (Debian/Ubuntu)
+│   ├── prerequisites_redhat.yml # YUM/DNF repository setup (RedHat/EL)
+│   ├── install.yml          # Package installation dispatcher
+│   ├── install_debian.yml   # APT package installation (Debian/Ubuntu)
+│   ├── install_redhat.yml   # DNF package installation (RedHat/EL)
 │   ├── configure.yml        # Config & systemd override deployment
 │   ├── service.yml          # Service state management
-│   └── remove.yml           # Removal and cleanup tasks
+│   ├── remove.yml           # Removal dispatcher
+│   ├── remove_debian.yml    # APT package removal (Debian/Ubuntu)
+│   └── remove_redhat.yml    # DNF package removal (RedHat/EL)
 ├── templates/
 │   ├── config.alloy.j2      # Main Alloy HCL configuration template
 │   └── override.conf.j2     # Systemd hardening override template

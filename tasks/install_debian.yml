@@ -1,0 +1,13 @@
+---
+# =============================================================================
+# Ansible Role: Alloy - Tasks: Installation (Debian)
+# =============================================================================
+# Installs Grafana Alloy APT package on Debian/Ubuntu.
+# =============================================================================
+
+- name: Alloy | install | Install Grafana Alloy package (Debian)
+  become: "{{ alloy_become }}"
+  ansible.builtin.apt:
+    name: "alloy={{ alloy_version }}*"
+    state: present
+    update_cache: true

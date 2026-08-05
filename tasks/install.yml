@@ -2,22 +2,15 @@
 # =============================================================================
 # Ansible Role: Alloy - Tasks: Installation
 # =============================================================================
-# Installs the Grafana Alloy package via system package manager.
+# Dispatcher for Grafana Alloy package installation per Red Hat CoP.
 # =============================================================================
 
-- name: Alloy | install | Install Grafana Alloy package (Debian)
-  become: "{{ alloy_become }}"
-  ansible.builtin.apt:
-    name: "alloy={{ alloy_version }}*"
-    state: present
-    update_cache: true
+- name: Alloy | install | Run Debian package installation
+  ansible.builtin.include_tasks: install_debian.yml
   when: ansible_facts['os_family'] == 'Debian'
 
-- name: Alloy | install | Install Grafana Alloy package (RedHat)
-  become: "{{ alloy_become }}"
-  ansible.builtin.dnf:
-    name: "alloy-{{ alloy_version }}"
-    state: present
+- name: Alloy | install | Run RedHat package installation
+  ansible.builtin.include_tasks: install_redhat.yml
   when: ansible_facts['os_family'] == 'RedHat'
 
 - name: Alloy | install | Add alloy user to systemd-journal group for log access

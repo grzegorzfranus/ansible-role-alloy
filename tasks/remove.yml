@@ -2,7 +2,7 @@
 # =============================================================================
 # Ansible Role: Alloy - Tasks: Removal
 # =============================================================================
-# Uninstalls Grafana Alloy package and removes configurations.
+# Dispatcher for Grafana Alloy package uninstallation per Red Hat CoP.
 # =============================================================================
 
 - name: Alloy | remove | Stop and disable Grafana Alloy service
@@ -13,19 +13,12 @@
     enabled: false
   failed_when: false
 
-- name: Alloy | remove | Remove Grafana Alloy package (Debian)
-  become: "{{ alloy_become }}"
-  ansible.builtin.apt:
-    name: alloy
-    state: absent
-    purge: true
+- name: Alloy | remove | Run Debian package removal
+  ansible.builtin.include_tasks: remove_debian.yml
   when: ansible_facts['os_family'] == 'Debian'
 
-- name: Alloy | remove | Remove Grafana Alloy package (RedHat)
-  become: "{{ alloy_become }}"
-  ansible.builtin.dnf:
-    name: alloy
-    state: absent
+- name: Alloy | remove | Run RedHat package removal
+  ansible.builtin.include_tasks: remove_redhat.yml
   when: ansible_facts['os_family'] == 'RedHat'
 
 - name: Alloy | remove | Remove configuration and systemd directories

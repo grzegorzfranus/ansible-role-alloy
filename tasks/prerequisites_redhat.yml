@@ -1,0 +1,17 @@
+---
+# =============================================================================
+# Ansible Role: Alloy - Tasks: Prerequisites (RedHat)
+# =============================================================================
+# Configures YUM/DNF repository for RedHat/EL.
+# =============================================================================
+
+- name: Alloy | prerequisites | Add Grafana YUM repository (RedHat)
+  become: "{{ alloy_become }}"
+  ansible.builtin.yum_repository:
+    name: grafana
+    description: Grafana YUM Repository
+    baseurl: "{{ alloy_yum_repo_baseurl }}"
+    gpgcheck: true
+    gpgkey: "{{ alloy_repo_gpg_key }}"
+    enabled: true
+    state: present
