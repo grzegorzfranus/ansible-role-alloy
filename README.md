@@ -2,7 +2,7 @@
 
 |Source|Version|CI|License|
 |------|-------|--|-------|
-|[![Source Code](https://img.shields.io/badge/source-github-blue.svg)](https://github.com/grzegorzfranus/ansible-role-alloy)|[![Version](https://img.shields.io/github/v/release/grzegorzfranus/ansible-role-alloy)](https://github.com/grzegorzfranus/ansible-role-alloy/releases)|[![CI](https://github.com/grzegorzfranus/ansible-role-alloy/actions/workflows/ci.yml/badge.svg)](https://github.com/grzegorzfranus/ansible-role-alloy/actions/workflows/ci.yml)|[![Repository License](https://img.shields.io/badge/license-mit-brightgreen.svg)](LICENSE)|
+|[![Source Code](https://img.shields.io/badge/source-github-blue.svg)](https://github.com/grzegorzfranus/ansible-role-alloy)|[![Version](https://img.shields.io/github/v/release/grzegorzfranus/ansible-role-alloy)](https://github.com/grzegorzfranus/ansible-role-alloy/releases)|[![CI](https://github.com/grzegorzfranus/ansible-role-alloy/actions/workflows/ci.yml/badge.svg)](https://github.com/grzegorzfranus/ansible-role-alloy/actions/workflows/ci.yml)|[![Repository License](https://img.shields.io/badge/license-apache2.0-brightgreen.svg)](LICENSE)|
 
 This Ansible role installs, configures, hardens, and manages Grafana Alloy, the unified telemetry collector for Grafana Loki. It provides a production-ready, secure log shipping solution supporting systemd journald log collection, Docker container log discovery, and mandatory multi-tenant `X-Scope-OrgID` header enforcement.
 
@@ -328,9 +328,28 @@ This repository uses automated quality gates enforcing YAML linting, Ansible lin
 
 Contributions, bug reports, and feature requests are welcome!
 
+- Fork the repository and create your branch from `main`
+- Use [Conventional Commits](https://www.conventionalcommits.org/) for commit messages:
+  - `feat:` — new features
+  - `fix:` — bug fixes
+  - `refactor:` — code refactoring
+  - `docs:` — documentation changes
+  - `ci:` — CI/CD pipeline updates
+  - `build:` — dependency and build configuration updates
+  - `chore:` — maintenance tasks
+  - `test:` — test additions or corrections
+  - `perf:` — performance improvements
+  - `revert:` — code reverts
+  - `style:` — code formatting and style
+- Use branch naming convention: `feature/`, `bugfix/`, `fix/`, `hotfix/`, `release/`, `chore/`, `docs/`, `refactor/`, `test/`, `build/`, `ci/`, `perf/`, `revert/`
+- Ensure your code passes all CI checks (YAML lint, Ansible lint, Molecule tests)
+- Centralized workflows from [github-workflows](https://github.com/grzegorzfranus/github-workflows) are used to run CI/CD pipelines
+- Submit a pull request describing your changes (a template is available under `.github/PULL_REQUEST_TEMPLATE/pull_request_template.md` to help structure your PR description)
+- For major changes, please open an issue first to discuss what you would like to change (issue templates for bug reports, feature requests, and tasks are available under `.github/ISSUE_TEMPLATE/`)
+
 ## 📝 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the Apache-2.0 License - see the LICENSE file for details.
 
 ## 👥 Author Information
 
