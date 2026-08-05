@@ -83,7 +83,7 @@ This role requires root access for package installation and service management.
   roles:
     - role: grzegorzfranus.alloy
       vars:
-        alloy_loki_url: "http://100.95.91.122:3100/loki/api/v1/push"
+        alloy_loki_url: "http://192.0.2.10:3100/loki/api/v1/push"
         alloy_tenant_id: "nonprod"
         alloy_enable_journald_logs: true
 ```
@@ -190,9 +190,9 @@ sudo alloy fmt /etc/alloy/config.alloy
 ### Check Log Ingestion via Loki API
 
 ```bash
-curl -s -G "http://100.95.91.122:3100/loki/api/v1/query_range" \
+curl -s -G "http://192.0.2.10:3100/loki/api/v1/query_range" \
   -H "X-Scope-OrgID: nonprod" \
-  --data-urlencode 'query={host="app-npd-01.comlia.app"}' \
+  --data-urlencode 'query={host="app-01.example.com"}' \
   --data-urlencode "start=$(( $(date +%s) - 900 ))000000000" \
   --data-urlencode "end=$(date +%s)000000000"
 ```
@@ -352,7 +352,7 @@ Automated via [Release Please](https://github.com/googleapis/release-please):
   roles:
     - role: grzegorzfranus.alloy
       vars:
-        alloy_loki_url: "http://100.95.91.122:3100/loki/api/v1/push"
+        alloy_loki_url: "http://192.0.2.10:3100/loki/api/v1/push"
         alloy_tenant_id: "management"
         alloy_enable_journald_logs: true
         alloy_enable_docker_logs: true
