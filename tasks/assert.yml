@@ -32,14 +32,21 @@
       - alloy_repo_gpg_key is string
       - alloy_repo_gpg_key | length > 0
       - alloy_repo_gpg_key is match('^https://.+')
-      - alloy_apt_repo is defined
-      - alloy_apt_repo is string
-      - alloy_apt_repo | length > 0
+      - alloy_apt_repo_url is defined
+      - alloy_apt_repo_url is string
+      - alloy_apt_repo_url | length > 0
+      - alloy_apt_repo_url is match('^https://.+')
+      - alloy_apt_repo_suite is defined
+      - alloy_apt_repo_suite is string
+      - alloy_apt_repo_suite | length > 0
+      - alloy_apt_repo_component is defined
+      - alloy_apt_repo_component is string
+      - alloy_apt_repo_component | length > 0
       - alloy_yum_repo_baseurl is defined
       - alloy_yum_repo_baseurl is string
       - alloy_yum_repo_baseurl | length > 0
       - alloy_yum_repo_baseurl is match('^https://.+')
-    fail_msg: "Repository variables must be non-empty strings and GPG/YUM URLs must start with https://"
+    fail_msg: "Repository variables must be non-empty strings and GPG/APT/YUM URLs must start with https://"
     success_msg: "Package repository parameters validated"
   when: alloy_state == 'present'
 

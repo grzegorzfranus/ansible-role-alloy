@@ -40,8 +40,16 @@
 
 - name: Alloy | prerequisites | Add Grafana APT repository (Debian)
   become: true
-  ansible.builtin.apt_repository:
-    repo: "{{ alloy_apt_repo }}"
+  ansible.builtin.deb822_repository:
+    name: grafana
+    types:
+      - deb
+    uris:
+      - "{{ alloy_apt_repo_url }}"
+    suites:
+      - "{{ alloy_apt_repo_suite }}"
+    components:
+      - "{{ alloy_apt_repo_component }}"
+    signed_by: /etc/apt/keyrings/grafana.gpg
     state: present
-    filename: grafana
-    update_cache: true
+    enabled: true
