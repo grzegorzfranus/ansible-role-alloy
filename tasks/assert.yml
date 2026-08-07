@@ -9,6 +9,7 @@
 # -----------------------------------------------------------------------------
 # 1. Service State (Lifecycle)
 # -----------------------------------------------------------------------------
+# Validates target lifecycle state configuration.
 
 - name: Alloy | assert | Validate lifecycle state
   ansible.builtin.assert:
@@ -21,6 +22,7 @@
 # -----------------------------------------------------------------------------
 # 2. Version and Package Settings
 # -----------------------------------------------------------------------------
+# Validates release version specification and package repository parameters.
 
 - name: Alloy | assert | Validate version specification
   ansible.builtin.assert:
@@ -61,22 +63,17 @@
 # -----------------------------------------------------------------------------
 # 3. General Settings
 # -----------------------------------------------------------------------------
+# Validates service state management toggles and system account settings.
 
-- name: Alloy | assert | Validate boolean parameters
+- name: Alloy | assert | Validate service management boolean parameters
   ansible.builtin.assert:
     that:
       - alloy_service_enabled is defined
       - alloy_service_enabled is boolean
       - alloy_manage_service_restart is defined
       - alloy_manage_service_restart is boolean
-      - alloy_enable_journald_logs is defined
-      - alloy_enable_journald_logs is boolean
-      - alloy_enable_docker_logs is defined
-      - alloy_enable_docker_logs is boolean
-      - alloy_systemd_hardening_enabled is defined
-      - alloy_systemd_hardening_enabled is boolean
     fail_msg: "Boolean flags must be true or false"
-    success_msg: "Boolean parameters validated"
+    success_msg: "Service management boolean parameters validated"
   when: alloy_state | lower == 'present'
 
 - name: Alloy | assert | Validate system user and group parameters
@@ -95,6 +92,7 @@
 # -----------------------------------------------------------------------------
 # 4. Loki Push Target & Multi-Tenancy
 # -----------------------------------------------------------------------------
+# Validates Loki push URL endpoint, mandatory tenant ID, and custom labels.
 
 - name: Alloy | assert | Validate Loki push URL parameter
   ansible.builtin.assert:
@@ -129,6 +127,18 @@
 # -----------------------------------------------------------------------------
 # 5. Log Collection Sources
 # -----------------------------------------------------------------------------
+# Validates log collection source toggles and Docker daemon socket path.
+
+- name: Alloy | assert | Validate log collection boolean parameters
+  ansible.builtin.assert:
+    that:
+      - alloy_enable_journald_logs is defined
+      - alloy_enable_journald_logs is boolean
+      - alloy_enable_docker_logs is defined
+      - alloy_enable_docker_logs is boolean
+    fail_msg: "Boolean flags must be true or false"
+    success_msg: "Log collection boolean parameters validated"
+  when: alloy_state | lower == 'present'
 
 - name: Alloy | assert | Validate Docker socket path parameter
   ansible.builtin.assert:
@@ -143,3 +153,13 @@
 # -----------------------------------------------------------------------------
 # 6. Systemd Hardening & Execution
 # -----------------------------------------------------------------------------
+# Validates systemd security hardening override toggle.
+
+- name: Alloy | assert | Validate systemd hardening toggle
+  ansible.builtin.assert:
+    that:
+      - alloy_systemd_hardening_enabled is defined
+      - alloy_systemd_hardening_enabled is boolean
+    fail_msg: "Boolean flags must be true or false"
+    success_msg: "Systemd hardening toggle validated"
+  when: alloy_state | lower == 'present'
