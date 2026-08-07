@@ -14,11 +14,11 @@
   failed_when: false
 
 - name: Alloy | remove | Run Debian package removal
-  ansible.builtin.include_tasks: remove_debian.yml
+  ansible.builtin.import_tasks: remove_debian.yml
   when: ansible_facts['os_family'] == 'Debian'
 
 - name: Alloy | remove | Run RedHat package removal
-  ansible.builtin.include_tasks: remove_redhat.yml
+  ansible.builtin.import_tasks: remove_redhat.yml
   when: ansible_facts['os_family'] == 'RedHat'
 
 - name: Alloy | remove | Remove configuration and systemd directories
@@ -29,3 +29,5 @@
   loop:
     - /etc/alloy
     - /etc/systemd/system/alloy.service.d
+  loop_control:
+    label: "{{ item }}"

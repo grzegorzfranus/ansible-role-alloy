@@ -6,11 +6,11 @@
 # =============================================================================
 
 - name: Alloy | install | Run Debian package installation
-  ansible.builtin.include_tasks: install_debian.yml
+  ansible.builtin.import_tasks: install_debian.yml
   when: ansible_facts['os_family'] == 'Debian'
 
 - name: Alloy | install | Run RedHat package installation
-  ansible.builtin.include_tasks: install_redhat.yml
+  ansible.builtin.import_tasks: install_redhat.yml
   when: ansible_facts['os_family'] == 'RedHat'
 
 - name: Alloy | install | Add alloy user to systemd-journal group for log access

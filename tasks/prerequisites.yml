@@ -6,9 +6,9 @@
 # =============================================================================
 
 - name: Alloy | prerequisites | Run Debian/Ubuntu prerequisite tasks
-  ansible.builtin.include_tasks: prerequisites_debian.yml
+  ansible.builtin.import_tasks: prerequisites_debian.yml
   when: ansible_facts['os_family'] == 'Debian'
 
 - name: Alloy | prerequisites | Run RedHat/EL prerequisite tasks
-  ansible.builtin.include_tasks: prerequisites_redhat.yml
+  ansible.builtin.import_tasks: prerequisites_redhat.yml
   when: ansible_facts['os_family'] == 'RedHat'
