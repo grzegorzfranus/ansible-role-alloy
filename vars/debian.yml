@@ -12,3 +12,4 @@ __alloy_prereq_packages:
   - gpg
   - apt-transport-https
   - ca-certificates
+  - python3-debian
