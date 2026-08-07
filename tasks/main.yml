@@ -19,25 +19,45 @@
         - "main.yml"
       paths:
         - "{{ role_path }}/vars"
+  tags:
+    - always
 
 - name: Alloy | main | Run configuration assertions
-  ansible.builtin.include_tasks: assert.yml
+  ansible.builtin.import_tasks: assert.yml
+  tags:
+    - always
+    - alloy_validate
 
 - name: "Alloy | main | Execute lifecycle tasks for state: present"
-  when: alloy_state == 'present'
+  when: alloy_state | lower == 'present'
   block:
     - name: Alloy | main | Run prerequisite tasks
-      ansible.builtin.include_tasks: prerequisites.yml
+      ansible.builtin.import_tasks: prerequisites.yml
+      tags:
+        - alloy_setup
+        - alloy_init
+        - alloy_requirements
 
     - name: Alloy | main | Run installation tasks
-      ansible.builtin.include_tasks: install.yml
+      ansible.builtin.import_tasks: install.yml
+      tags:
+        - alloy_setup
+        - alloy_install
 
     - name: Alloy | main | Run configuration tasks
-      ansible.builtin.include_tasks: configure.yml
+      ansible.builtin.import_tasks: configure.yml
+      tags:
+        - alloy_setup
+        - alloy_configure
 
     - name: Alloy | main | Run service management tasks
-      ansible.builtin.include_tasks: service.yml
+      ansible.builtin.import_tasks: service.yml
+      tags:
+        - alloy_setup
+        - alloy_service
 
 - name: "Alloy | main | Execute removal tasks for state: absent"
-  ansible.builtin.include_tasks: remove.yml
-  when: alloy_state == 'absent'
+  ansible.builtin.import_tasks: remove.yml
+  when: alloy_state | lower == 'absent'
+  tags:
+    - alloy_remove

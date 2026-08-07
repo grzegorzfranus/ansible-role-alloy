@@ -57,14 +57,6 @@ List of officially supported operating systems for this role:
 | Debian | 11 (Bullseye) | ![✓](https://img.shields.io/badge/✓-brightgreen.svg) |
 | EL (RHEL, Rocky, Alma, Oracle) | 9 | ![✓](https://img.shields.io/badge/✓-brightgreen.svg) |
 
-### Ansible version
-
-Ansible >= 2.15
-
-### Python version
-
-Python >= 3.9
-
 ### Setup module
 The role uses facts gathered by Ansible on the remote host (`ansible_facts['os_family']`). If you disable the Setup module in your playbook, the role will not work properly.
 
@@ -286,19 +278,19 @@ ansible-role-alloy/
 
 ## 🏷️ Tags
 
-All tags are prefixed with `alloy_` to avoid collisions.
+All tags are prefixed with `alloy_` to avoid collisions (except standard `always`).
 
 | Tag | Description |
 |-----|-------------|
-| `always` | Tasks that always run (variable loading and validation) |
-| `alloy_setup` | Setup tasks including OS-specific variables, requirements, installation, and configuration |
-| `alloy_init` | Initial setup tasks |
-| `alloy_validate` | Variable validation tasks |
-| `alloy_requirements` | System requirements verification |
-| `alloy_install` | Package installation tasks |
-| `alloy_configure` | Service configuration tasks |
-| `alloy_service` | Service management tasks |
-| `alloy_remove` | Uninstallation and cleanup tasks |
+| `always` | Tasks that always run (OS variable gathering and validation assertions) |
+| `alloy_setup` | Grouping tag for all setup tasks (prerequisites, installation, configuration, service management) |
+| `alloy_init` | Initial prerequisite and repository configuration tasks |
+| `alloy_validate` | Variable assertion and preflight validation tasks |
+| `alloy_requirements` | System package and GPG repository requirements setup |
+| `alloy_install` | Package installation and user group membership tasks |
+| `alloy_configure` | Service configuration and systemd hardening override tasks |
+| `alloy_service` | Service state management and startup tasks |
+| `alloy_remove` | Uninstallation and directory cleanup tasks |
 
 ## CI/CD Pipeline
 
@@ -306,18 +298,24 @@ This repository uses automated quality gates enforcing YAML linting, Ansible lin
 
 ## Example Playbooks
 
+### Production Multi-Tenant Setup with Docker & Custom Labels
+
 ```yaml
 ---
-- name: Deploy Grafana Alloy
-  hosts: all
+- name: Deploy Grafana Alloy for Production Workloads
+  hosts: logging_clients
   become: true
   roles:
     - role: grzegorzfranus.alloy
       vars:
         alloy_loki_url: "http://100.95.91.122:3100/loki/api/v1/push"
-        alloy_tenant_id: "management"
+        alloy_tenant_id: "production"
         alloy_enable_journald_logs: true
         alloy_enable_docker_logs: true
+        alloy_custom_labels:
+          environment: "production"
+          datacenter: "poland-dc1"
+          cluster: "k8s-edge"
 ```
 
 ## 🤝 Contributing

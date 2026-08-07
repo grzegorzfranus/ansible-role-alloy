@@ -22,8 +22,9 @@
     owner: root
     group: "{{ alloy_group }}"
     mode: "0640"
+    backup: true
     validate: "alloy fmt %s"
-  notify: Restart alloy service
+  notify: Alloy | handlers | Restart alloy service
 
 - name: Alloy | configure | Ensure systemd override directory exists
   become: "{{ alloy_become }}"
@@ -43,7 +44,8 @@
     owner: root
     group: root
     mode: "0644"
+    backup: true
   notify:
-    - Reload systemd daemon
-    - Restart alloy service
+    - Alloy | handlers | Reload systemd daemon
+    - Alloy | handlers | Restart alloy service
   when: alloy_systemd_hardening_enabled | bool
