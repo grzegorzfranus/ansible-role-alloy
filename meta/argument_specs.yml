@@ -23,10 +23,18 @@ argument_specs:
         type: str
         default: "https://apt.grafana.com/gpg.key"
         description: GPG key URL for Grafana package repository.
-      alloy_apt_repo:
+      alloy_apt_repo_url:
         type: str
-        default: "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main"
-        description: APT repository specification line for Grafana packages.
+        default: "https://apt.grafana.com"
+        description: APT repository base URL for Grafana packages.
+      alloy_apt_repo_suite:
+        type: str
+        default: "stable"
+        description: APT repository distribution suite for Grafana packages.
+      alloy_apt_repo_component:
+        type: str
+        default: "main"
+        description: APT repository component for Grafana packages.
       alloy_yum_repo_baseurl:
         type: str
         default: "https://rpm.grafana.com"

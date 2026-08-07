@@ -126,7 +126,9 @@ alloy_systemd_hardening_enabled: true
 |----------|-------------|---------|
 | `alloy_version` | Pinned Grafana Alloy release version string | `"1.7.1"` |
 | `alloy_repo_gpg_key` | GPG key URL for Grafana package repository | `"https://apt.grafana.com/gpg.key"` |
-| `alloy_apt_repo` | APT repository specification line for Grafana packages | `"deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main"` |
+| `alloy_apt_repo_url` | APT repository base URL for Grafana packages | `"https://apt.grafana.com"` |
+| `alloy_apt_repo_suite` | APT repository suite for Grafana packages | `"stable"` |
+| `alloy_apt_repo_component` | APT repository component for Grafana packages | `"main"` |
 | `alloy_yum_repo_baseurl` | YUM/DNF repository base URL for Grafana packages | `"https://rpm.grafana.com"` |
 
 ### General Settings

@@ -39,9 +39,17 @@ alloy_version: "1.7.1"
 # Valid values: valid URL string
 alloy_repo_gpg_key: "https://apt.grafana.com/gpg.key"
 
-# APT repository specification for Grafana packages
-# Valid values: APT repository line string
-alloy_apt_repo: "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main"
+# APT repository base URL for Grafana packages
+# Valid values: valid URL string
+alloy_apt_repo_url: "https://apt.grafana.com"
+
+# APT repository suite for Grafana packages
+# Valid values: suite identifier string
+alloy_apt_repo_suite: "stable"
+
+# APT repository component for Grafana packages
+# Valid values: component identifier string
+alloy_apt_repo_component: "main"
 
 # YUM/DNF repository base URL for Grafana packages
 # Valid values: valid repository URL string
