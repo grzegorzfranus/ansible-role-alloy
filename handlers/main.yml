@@ -2,12 +2,15 @@
 # =============================================================================
 # Ansible Role: Alloy - Handlers
 # =============================================================================
-- name: Reload systemd daemon
+# Systemd daemon reload and service restart handlers for Grafana Alloy.
+# =============================================================================
+
+- name: Alloy | handlers | Reload systemd daemon
   become: true
   ansible.builtin.systemd:
     daemon_reload: true
 
-- name: Restart alloy service
+- name: Alloy | handlers | Restart alloy service
   become: true
   ansible.builtin.systemd:
     name: "{{ __alloy_service_name }}"
