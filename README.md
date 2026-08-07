@@ -57,14 +57,6 @@ List of officially supported operating systems for this role:
 | Debian | 11 (Bullseye) | ![✓](https://img.shields.io/badge/✓-brightgreen.svg) |
 | EL (RHEL, Rocky, Alma, Oracle) | 9 | ![✓](https://img.shields.io/badge/✓-brightgreen.svg) |
 
-### Ansible version
-
-Ansible >= 2.15
-
-### Python version
-
-Python >= 3.9
-
 ### Setup module
 The role uses facts gathered by Ansible on the remote host (`ansible_facts['os_family']`). If you disable the Setup module in your playbook, the role will not work properly.
 
@@ -201,10 +193,11 @@ curl -s -G "http://192.0.2.10:3100/loki/api/v1/query_range" \
 
 ## 🛡️ Security Features
 
-- ✅ **Mandatory Multi-Tenant Validation**: Enforces non-empty `alloy_tenant_id` before rendering config
+- ✅ **Mandatory Multi-Tenant Validation**: Enforces non-empty `alloy_tenant_id` before rendering config; keep `alloy_tenant_id` synchronized with environment structure (`management`, `nonprod`, `production`)
 - ✅ **Secure File Permissions**: `config.alloy` rendered with `0640` permissions owned by `root:alloy`
 - ✅ **Systemd Hardening**: Applies `ProtectSystem=full`, `ProtectHome=true`, and `PrivateTmp=true` overrides
 - ✅ **Least Privilege Access**: `alloy` user granted read access to `systemd-journal` and `docker` groups only as needed
+- ✅ **Secure Transport**: Ensure Loki push endpoint (`alloy_loki_url`) is bound to a secure mesh network or protected by TLS
 
 ### Uninstall
 
@@ -219,19 +212,10 @@ sudo apt remove --purge alloy   # or: sudo dnf remove alloy
 
 Configuration files can be restored from system backups or previous git tags. If reverting configuration, restart the `alloy` systemd service.
 
-## 🔒 Security considerations
-
-- Keep `alloy_tenant_id` synchronized with your environment structure (`management`, `nonprod`, `production`).
-- Ensure Loki endpoint (`alloy_loki_url`) is bound to a secure mesh network (Tailscale) or protected by TLS.
-
 ## 🧪 Check mode behavior
 
 - Configuration template rendering and file permission checks run normally in Check Mode.
 - Mutating package installation and systemd service changes are safely skipped.
-
-## 🏷️ Tags usage
-
-- Use `--tags` to run selective parts of the role: `always`, `alloy_setup`, `alloy_init`, `alloy_validate`, `alloy_requirements`, `alloy_install`, `alloy_configure`, `alloy_service`, `alloy_remove`.
 
 ## 🌐 Network resilience
 
@@ -304,18 +288,18 @@ ansible-role-alloy/
 
 ## 🏷️ Tags
 
-All tags are prefixed with `alloy_` to avoid collisions.
+All tags (except `always`) are prefixed with `alloy_` to avoid collisions. Use `--tags` to run selective parts of the role.
 
 | Tag | Description |
 |-----|-------------|
-| `always` | Tasks that always run (variable loading and validation) |
-| `alloy_setup` | Setup tasks including OS-specific variables, requirements, installation, and configuration |
-| `alloy_init` | Initial setup tasks |
-| `alloy_validate` | Variable validation tasks |
-| `alloy_requirements` | System requirements verification |
+| `always` | Tasks that always run (variable loading and configuration assertions) |
+| `alloy_setup` | High-level setup meta tag including prerequisites, installation, configuration, and service tasks |
+| `alloy_init` | Initial setup and prerequisite tasks |
+| `alloy_validate` | Variable validation and configuration assertions |
+| `alloy_requirements` | System requirements verification and package repository prerequisites |
 | `alloy_install` | Package installation tasks |
-| `alloy_configure` | Service configuration tasks |
-| `alloy_service` | Service management tasks |
+| `alloy_configure` | Service configuration file and systemd override deployment tasks |
+| `alloy_service` | Systemd service management tasks |
 | `alloy_remove` | Uninstallation and cleanup tasks |
 
 ## CI/CD Pipeline
@@ -346,18 +330,24 @@ Automated via [Release Please](https://github.com/googleapis/release-please):
 
 ## Example Playbooks
 
+### Production Setup with Docker Logs and Custom Labels
+
 ```yaml
 ---
-- name: Deploy Grafana Alloy
-  hosts: all
+- name: Deploy Grafana Alloy for Production Container Fleet
+  hosts: logging_agents
   become: true
   roles:
     - role: grzegorzfranus.alloy
       vars:
         alloy_loki_url: "http://192.0.2.10:3100/loki/api/v1/push"
-        alloy_tenant_id: "management"
+        alloy_tenant_id: "production"
         alloy_enable_journald_logs: true
         alloy_enable_docker_logs: true
+        alloy_custom_labels:
+          environment: "production"
+          datacenter: "eu-central-1"
+          tier: "frontend"
 ```
 
 ## 🤝 Contributing
