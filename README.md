@@ -76,7 +76,7 @@ This role requires root access for package installation and service management.
     - role: grzegorzfranus.alloy
       vars:
         alloy_loki_url: "http://192.0.2.10:3100/loki/api/v1/push"
-        alloy_tenant_id: "nonprod"
+        alloy_tenant_id: "staging"
         alloy_enable_journald_logs: true
 ```
 
@@ -185,7 +185,7 @@ sudo alloy fmt /etc/alloy/config.alloy
 
 ```bash
 curl -s -G "http://192.0.2.10:3100/loki/api/v1/query_range" \
-  -H "X-Scope-OrgID: nonprod" \
+  -H "X-Scope-OrgID: staging" \
   --data-urlencode 'query={host="app-01.example.com"}' \
   --data-urlencode "start=$(( $(date +%s) - 900 ))000000000" \
   --data-urlencode "end=$(date +%s)000000000"
@@ -193,7 +193,7 @@ curl -s -G "http://192.0.2.10:3100/loki/api/v1/query_range" \
 
 ## 🛡️ Security Features
 
-- ✅ **Mandatory Multi-Tenant Validation**: Enforces non-empty `alloy_tenant_id` before rendering config; keep `alloy_tenant_id` synchronized with environment structure (`management`, `nonprod`, `production`)
+- ✅ **Mandatory Multi-Tenant Validation**: Enforces non-empty `alloy_tenant_id` before rendering config; keep `alloy_tenant_id` synchronized with your organization's tenant structure (e.g., `default`, `staging`, `production`)
 - ✅ **Secure File Permissions**: `config.alloy` rendered with `0640` permissions owned by `root:alloy`
 - ✅ **Systemd Hardening**: Applies `ProtectSystem=full`, `ProtectHome=true`, and `PrivateTmp=true` overrides
 - ✅ **Least Privilege Access**: `alloy` user granted read access to `systemd-journal` and `docker` groups only as needed

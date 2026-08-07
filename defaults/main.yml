@@ -85,7 +85,7 @@ alloy_loki_url: ""
 
 # Mandatory Loki tenant identifier emitted as X-Scope-OrgID header
 # Security note: Loki rejects pushes with HTTP 401 if tenant_id is empty or missing
-# Valid values: string e.g. "management", "nonprod", "production"
+# Valid values: string identifier e.g. "default", "staging", "production"
 alloy_tenant_id: ""
 
 # Custom extra labels attached to all shipped log entries
