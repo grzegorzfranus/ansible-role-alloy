@@ -304,7 +304,7 @@ All tags (except `always`) are prefixed with `alloy_` to avoid collisions. Use `
 
 ## CI/CD Pipeline
 
-This repository uses centralized, reusable GitHub Actions workflows from [github-workflows](https://github.com/grzegorzfranus/github-workflows) for quality assurance, security scanning, and release automation.
+This repository uses centralized, reusable GitHub Actions workflows from [github-workflows](https://github.com/grzegorzfranus/github-workflows) (`@main`) for quality assurance, security scanning, and release automation.
 
 ### CI Pipeline (`ansible-ci.yml`)
 
