@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0](https://github.com/grzegorzfranus/ansible-role-alloy/compare/v1.0.6...v1.1.0) (2026-08-14)
+
+
+### Features
+
+* **relabel:** add parameterized relabeling rules for docker and journald ([#28](https://github.com/grzegorzfranus/ansible-role-alloy/issues/28)) ([b7341b3](https://github.com/grzegorzfranus/ansible-role-alloy/commit/b7341b318d7f4c5c1718f8abe7767d0fa2d178e4))
+
 ## [1.0.6](https://github.com/grzegorzfranus/ansible-role-alloy/compare/v1.0.5...v1.0.6) (2026-08-13)
 
 
