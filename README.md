@@ -11,7 +11,7 @@ This Ansible role installs, configures, hardens, and manages Grafana Alloy, the 
 - 📦 **Native Package Deployment**: Installed as a native system package managed directly by systemd
 - 🔒 **Multi-Tenant Log Isolation**: Enforces mandatory `alloy_tenant_id` (`X-Scope-OrgID` header) validation
 - 📜 **Systemd Journald Ingestion**: Collects system logs via `loki.source.journal` with unit and host relabeling
-- 🐳 **Docker Log Discovery**: Automatic container log collection via `discovery.docker` and `loki.source.docker`
+- 🐳 **Docker Log Discovery**: Automatic container log collection via `discovery.docker` and `loki.source.docker` with automatic `container` label extraction and custom relabeling rules
 - 🛡️ **Systemd Security Sandboxing**: Includes systemd unit security overrides (`ProtectSystem=full`, `ProtectHome=true`)
 - 🧪 **Molecule Testing**: Tested via containerized Molecule scenarios (`default`) across supported OS platforms
 - 🔄 **Idempotent Lifecycle**: Safe execution supporting `present` and `absent` lifecycle states
@@ -145,8 +145,11 @@ alloy_systemd_hardening_enabled: true
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `alloy_enable_journald_logs` | Enable systemd journald log collection | `true` |
+| `alloy_journald_extra_relabel_rules` | Custom relabeling rules for journald log streams | `[]` |
 | `alloy_enable_docker_logs` | Enable Docker container log collection | `false` |
 | `alloy_docker_socket_path` | Unix socket path to Docker daemon | `"unix:///var/run/docker.sock"` |
+| `alloy_docker_relabel_container_name` | Automatically map Docker container name to `container` label | `true` |
+| `alloy_docker_extra_relabel_rules` | Custom relabeling rules for Docker discovery targets | `[]` |
 
 ### Systemd Hardening & Execution
 
@@ -184,9 +187,17 @@ sudo alloy fmt /etc/alloy/config.alloy
 ### Check Log Ingestion via Loki API
 
 ```bash
+# Query logs by host
 curl -s -G "http://192.0.2.10:3100/loki/api/v1/query_range" \
   -H "X-Scope-OrgID: staging" \
   --data-urlencode 'query={host="app-01.example.com"}' \
+  --data-urlencode "start=$(( $(date +%s) - 900 ))000000000" \
+  --data-urlencode "end=$(date +%s)000000000"
+
+# Query logs by specific Docker container name
+curl -s -G "http://192.0.2.10:3100/loki/api/v1/query_range" \
+  -H "X-Scope-OrgID: staging" \
+  --data-urlencode 'query={host="app-01.example.com", container="my-app"}' \
   --data-urlencode "start=$(( $(date +%s) - 900 ))000000000" \
   --data-urlencode "end=$(date +%s)000000000"
 ```
@@ -344,6 +355,10 @@ Automated via [Release Please](https://github.com/googleapis/release-please):
         alloy_tenant_id: "production"
         alloy_enable_journald_logs: true
         alloy_enable_docker_logs: true
+        alloy_docker_relabel_container_name: true
+        alloy_docker_extra_relabel_rules:
+          - source_labels: ["__meta_docker_container_label_com_docker_compose_service"]
+            target_label: "service"
         alloy_custom_labels:
           environment: "production"
           datacenter: "eu-central-1"

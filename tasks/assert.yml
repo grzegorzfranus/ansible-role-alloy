@@ -150,6 +150,26 @@
     success_msg: "Docker socket path validated: {{ alloy_docker_socket_path }}"
   when: alloy_state | lower == 'present'
 
+- name: Alloy | assert | Validate Docker container relabeling toggle
+  ansible.builtin.assert:
+    that:
+      - alloy_docker_relabel_container_name is defined
+      - alloy_docker_relabel_container_name is boolean
+    fail_msg: "alloy_docker_relabel_container_name must be true or false"
+    success_msg: "Docker container relabeling toggle validated"
+  when: alloy_state | lower == 'present'
+
+- name: Alloy | assert | Validate extra relabel rules parameters
+  ansible.builtin.assert:
+    that:
+      - alloy_docker_extra_relabel_rules is defined
+      - alloy_docker_extra_relabel_rules is sequence
+      - alloy_journald_extra_relabel_rules is defined
+      - alloy_journald_extra_relabel_rules is sequence
+    fail_msg: "alloy_docker_extra_relabel_rules and alloy_journald_extra_relabel_rules must be lists"
+    success_msg: "Extra relabel rules parameters validated"
+  when: alloy_state | lower == 'present'
+
 # -----------------------------------------------------------------------------
 # 6. Systemd Hardening & Execution
 # -----------------------------------------------------------------------------

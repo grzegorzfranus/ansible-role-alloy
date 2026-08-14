@@ -108,6 +108,18 @@ alloy_enable_docker_logs: false
 # Valid values: socket path string
 alloy_docker_socket_path: "unix:///var/run/docker.sock"
 
+# Enable automatic mapping of Docker container name to the 'container' label
+# Valid values: true, false
+alloy_docker_relabel_container_name: true
+
+# Custom relabeling rules for Docker discovery targets
+# Valid values: list of rule dictionaries (e.g. [{source_labels: [...], target_label: "..."}])
+alloy_docker_extra_relabel_rules: []
+
+# Custom relabeling rules for systemd journald log streams
+# Valid values: list of rule dictionaries (e.g. [{source_labels: [...], target_label: "..."}])
+alloy_journald_extra_relabel_rules: []
+
 # -----------------------------------------------------------------------------
 # 6. Systemd Hardening & Execution
 # -----------------------------------------------------------------------------
