@@ -24,6 +24,23 @@ loki.relabel "journal" {
     source_labels = ["__journal__hostname"]
     target_label  = "host"
   }
+{% for rule in alloy_journald_extra_relabel_rules %}
+  rule {
+    source_labels = {{ rule.source_labels | to_json }}
+{% if rule.regex is defined %}
+    regex         = "{{ rule.regex }}"
+{% endif %}
+{% if rule.target_label is defined %}
+    target_label  = "{{ rule.target_label }}"
+{% endif %}
+{% if rule.action is defined %}
+    action        = "{{ rule.action }}"
+{% endif %}
+{% if rule.replacement is defined %}
+    replacement   = "{{ rule.replacement }}"
+{% endif %}
+  }
+{% endfor %}
 }
 
 loki.source.journal "read_journal" {
@@ -45,9 +62,38 @@ discovery.docker "containers" {
   host = "{{ alloy_docker_socket_path }}"
 }
 
+discovery.relabel "docker" {
+  targets = discovery.docker.containers.targets
+
+{% if alloy_docker_relabel_container_name | bool %}
+  rule {
+    source_labels = ["__meta_docker_container_name"]
+    regex         = "/?(.*)"
+    target_label  = "container"
+  }
+{% endif %}
+{% for rule in alloy_docker_extra_relabel_rules %}
+  rule {
+    source_labels = {{ rule.source_labels | to_json }}
+{% if rule.regex is defined %}
+    regex         = "{{ rule.regex }}"
+{% endif %}
+{% if rule.target_label is defined %}
+    target_label  = "{{ rule.target_label }}"
+{% endif %}
+{% if rule.action is defined %}
+    action        = "{{ rule.action }}"
+{% endif %}
+{% if rule.replacement is defined %}
+    replacement   = "{{ rule.replacement }}"
+{% endif %}
+  }
+{% endfor %}
+}
+
 loki.source.docker "read_docker" {
   host       = "{{ alloy_docker_socket_path }}"
-  targets    = discovery.docker.containers.targets
+  targets    = discovery.relabel.docker.output
   forward_to = [loki.write.loki_sink.receiver]
   labels     = {
     host        = "{{ inventory_hostname }}",

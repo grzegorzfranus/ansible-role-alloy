@@ -79,6 +79,20 @@ argument_specs:
         type: str
         default: "unix:///var/run/docker.sock"
         description: Docker daemon socket path.
+      alloy_docker_relabel_container_name:
+        type: bool
+        default: true
+        description: Enable automatic relabeling of Docker container name to container label.
+      alloy_docker_extra_relabel_rules:
+        type: list
+        elements: dict
+        default: []
+        description: Additional relabeling rules applied to Docker container discovery targets.
+      alloy_journald_extra_relabel_rules:
+        type: list
+        elements: dict
+        default: []
+        description: Additional relabeling rules applied to journald log stream relabeler.
       alloy_systemd_hardening_enabled:
         type: bool
         default: true
