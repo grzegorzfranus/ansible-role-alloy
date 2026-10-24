@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1](https://github.com/grzegorzfranus/ansible-role-alloy/compare/v2.0.0...v2.0.1) (2026-10-24)
+
+
+### CI/CD
+
+* **workflows:** align Dependabot, release and CI workflows with github-workflows ([#33](https://github.com/grzegorzfranus/ansible-role-alloy/issues/33)) ([#34](https://github.com/grzegorzfranus/ansible-role-alloy/issues/34)) ([4b99c9d](https://github.com/grzegorzfranus/ansible-role-alloy/commit/4b99c9da984443922806666e9141ac125677ce89))
+
 ## [2.0.0](https://github.com/grzegorzfranus/ansible-role-alloy/compare/v1.1.0...v2.0.0) (2026-10-24)
 
 
