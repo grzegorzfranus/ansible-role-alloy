@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0](https://github.com/grzegorzfranus/ansible-role-alloy/compare/v1.1.0...v2.0.0) (2026-10-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* **platforms:** drop Debian 11 (Bullseye) support ([#30](https://github.com/grzegorzfranus/ansible-role-alloy/issues/30)) (#31)
+
+### Features
+
+* **platforms:** drop Debian 11 (Bullseye) support ([#30](https://github.com/grzegorzfranus/ansible-role-alloy/issues/30)) ([#31](https://github.com/grzegorzfranus/ansible-role-alloy/issues/31)) ([2342cd7](https://github.com/grzegorzfranus/ansible-role-alloy/commit/2342cd7578e90aacc1fd0f61d5bf7761afbcf7b6))
+
 ## [1.1.0](https://github.com/grzegorzfranus/ansible-role-alloy/compare/v1.0.6...v1.1.0) (2026-08-14)
 
 
